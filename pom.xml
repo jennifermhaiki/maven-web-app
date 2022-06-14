@@ -97,13 +97,13 @@
 	    <repository>
 	      <id>nexus</id>
 	      <name>Acada Learning Releases Nexus Repository</name>
-	      <url>http://172.31.28.242:8000/repository/td-btsp-release/</url>
+	      <url>http://http://172.31.3.67:8000/repository/web-app-release/</url>
 	    </repository>
 	    
 	    <snapshotRepository>
 	      <id>nexus</id>
 	      <name>Acada Learning Snapshot Nexus Repository</name>
-	      <url>http://172.31.28.242:8000/repository/td-btsp-snapshot/</url>
+	      <url>http://http://172.31.3.67:8000/repository/web-app-snapshot//</url>
 	    </snapshotRepository>
 	    
 	</distributionManagement>
