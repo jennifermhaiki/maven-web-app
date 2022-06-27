@@ -1,0 +1,53 @@
+pipeline{
+    agent {label 'node9'}
+    tools{
+        maven "maven3.8.4"
+    }
+    stages {
+        stage("1.CodeClone"){
+            steps{
+                git"https://github.com/jennifermhaiki/ubc-web-app.git"
+            
+            }
+        }
+        stage("2.Build"){
+            steps{
+                sh "mvn clean package"
+            }
+        }
+        stage("3.CodeQuality"){
+            steps{
+                sh "echo Testing Code Quality"
+                //sh "mvn sonar:sonar"
+            }
+        }
+        stage("4.Artifactory"){
+            steps{
+                sh "echo backing up in Nexus"
+                //sh "mvn deploy"
+            }
+        }
+        stage("5.deploy to UAT"){
+            steps{
+                deploy adapters: [tomcat9(credentialsId: '35895ddc-28e7-4a5c-8085-5fa7e6d89457', path: '', url: 'http://54.245.49.124:9000/')], contextPath: null, war: 'target/*.war'
+            }
+        }
+        stage("6.Approval"){
+            steps{
+                timeout(time:5, unit:'DAYS'){
+                    input message: "Approval for Production"
+                }
+            }
+        }
+        stage("7.deploy to PROD"){
+            steps{
+                deploy adapters: [tomcat9(credentialsId: '35895ddc-28e7-4a5c-8085-5fa7e6d89457', path: '', url: 'http://54.245.49.124:9000/')], contextPath: null, war: 'target/*.war'
+            }
+        }
+        stage("8.EmailNotification"){
+            steps{
+                slackSend channel: 'jennybaby', message: 'finished deploying', teamDomain: 'acadalearning', tokenCredentialId: '897241e8-283e-44d2-9246-5ad8ceac76c9'
+            }
+        }
+    }
+}
